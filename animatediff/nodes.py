@@ -23,6 +23,7 @@ from .motion_module import MotionWrapper, VanillaTemporalModule
 from .model_utils import get_available_models, get_model_path, get_model_hash
 from .utils import pil2tensor
 
+from notifier.notify import notifyAll
 
 def forward_timestep_embed(
     ts, x, emb, context=None, transformer_options={}, output_shape=None
@@ -418,6 +419,7 @@ class AnimateDiffCombine:
                 loop=loop_count,
                 compress_level=4,
             )
+            notifyAll(file_path,f"{prompt}")
         else:
             # save webm
             import shutil
@@ -443,6 +445,8 @@ class AnimateDiffCombine:
             with subprocess.Popen(args, stdin=subprocess.PIPE, env=env) as proc:
                 for frame in frames:
                     proc.stdin.write(frame.tobytes())
+            
+            notifyAll(file_path,f"{prompt}")
 
         previews = [
             {
